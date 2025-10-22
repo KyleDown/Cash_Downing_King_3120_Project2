@@ -1,3 +1,4 @@
+package stub;
 
 /*
  *   Copyright (C) 2022 -- 2025  Zachary A. Kissel
