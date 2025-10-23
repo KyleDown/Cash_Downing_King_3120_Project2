@@ -19,8 +19,7 @@ package lexer;
 /**
  * An enumeration of token types.
  */
-public enum TokenType
-{
+public enum TokenType {
     /**
      * An integer token.
      */
@@ -145,6 +144,16 @@ public enum TokenType
      * Modulus operation
      */
     MOD,
+
+    /**
+     * Let keyword for local scope.
+     */
+    LET,
+
+    /**
+     * In keyword for let expression body.
+     */
+    IN,
 
     /**
      * The Semi colon.
