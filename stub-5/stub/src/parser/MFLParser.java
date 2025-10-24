@@ -22,6 +22,7 @@ import java.util.LinkedList;
 
 import ast.SyntaxTree;
 import ast.nodes.BinOpNode;
+import ast.nodes.LetNode;
 import ast.nodes.ProgNode;
 import ast.nodes.RelOpNode;
 import ast.nodes.SyntaxNode;
@@ -156,6 +157,26 @@ public class MFLParser extends Parser {
 
     trace("Enter <expr>");
 
+    // Check for the let expression first, based on the grammar
+    // <expr> -> let <id> := <expr> in <expr>
+    if (tokenIs(TokenType.LET)) {
+      nextToken(); // Consume the 'let'
+
+      Token id = getCurrToken(); // Get the identifier
+      match(TokenType.ID, "identifier"); // Consume the 'id'
+
+      match(TokenType.ASSIGN, ":="); // Consume the ':='
+
+      SyntaxNode varExpr = getGoodParse(evalExpr()); // Parse the value expression
+
+      match(TokenType.IN, "in"); // Consume the 'in'
+
+      SyntaxNode bodyExpr = getGoodParse(evalExpr()); // Parse the body expression
+
+      trace("Exit <expr> [let]");
+      return new LetNode(id, varExpr, bodyExpr, getCurrLine());
+    }
+
     expr = getGoodParse(evalRexpr());
 
     op = getCurrToken().getType(); // Save off the supposed operation.
@@ -252,53 +273,51 @@ public class MFLParser extends Parser {
   }
 
   /**
-     * Method to evaluate the factor non-terminal (the tightest binding operations). 
-     * @return the subtree resulting from the parse.
-     * @throws ParseException when parsing fails.
-     */
-    private SyntaxNode evalFactor() throws ParseException {
-        trace("Enter <factor>");
-        SyntaxNode fact = null;
+   * Method to evaluate the factor non-terminal (the tightest binding operations).
+   * 
+   * @return the subtree resulting from the parse.
+   * @throws ParseException when parsing fails.
+   */
+  private SyntaxNode evalFactor() throws ParseException {
+    trace("Enter <factor>");
+    SyntaxNode fact = null;
 
-        // Do we have a unary sub (i.e., a negative).
-        if (checkMatch(TokenType.SUB))
-        {
-            SyntaxNode expr = getGoodParse(evalFactor());
-            return new UnaryOpNode(expr, TokenType.SUB, getCurrLine());
-        }
-
-    
-        // Parenthisized expression
-        else if (checkMatch(TokenType.LPAREN)) { 
-            
-            fact = getGoodParse(evalExpr());
-            
-            // Force the right paren.
-            match(TokenType.RPAREN, ")");        
-        } 
-        
-        // Handle the literals.
-        else if (tokenIs(TokenType.INT) || tokenIs(TokenType.REAL) ||
-                   tokenIs(TokenType.TRUE) || tokenIs(TokenType.FALSE)) {
-                fact = new TokenNode(getCurrToken(), getCurrLine());
-                nextToken();        // advance the token stream.
-                return fact;
-        }
-
-        // Handle an identifer.
-        else if (tokenIs(TokenType.ID)) {
-            Token ident = getCurrToken(); // Store off the next token.
-            nextToken();    // advance the token stream.
-
-            // Just a run of the mill token.
-            fact = new TokenNode(ident, getCurrLine());
-
-        }
-            
-        trace("Exit <factor>");
-        return fact;
+    // Do we have a unary sub (i.e., a negative).
+    if (checkMatch(TokenType.SUB)) {
+      SyntaxNode expr = getGoodParse(evalFactor());
+      return new UnaryOpNode(expr, TokenType.SUB, getCurrLine());
     }
 
+    // Parenthisized expression
+    else if (checkMatch(TokenType.LPAREN)) {
+
+      fact = getGoodParse(evalExpr());
+
+      // Force the right paren.
+      match(TokenType.RPAREN, ")");
+    }
+
+    // Handle the literals.
+    else if (tokenIs(TokenType.INT) || tokenIs(TokenType.REAL) ||
+        tokenIs(TokenType.TRUE) || tokenIs(TokenType.FALSE)) {
+      fact = new TokenNode(getCurrToken(), getCurrLine());
+      nextToken(); // advance the token stream.
+      return fact;
+    }
+
+    // Handle an identifer.
+    else if (tokenIs(TokenType.ID)) {
+      Token ident = getCurrToken(); // Store off the next token.
+      nextToken(); // advance the token stream.
+
+      // Just a run of the mill token.
+      fact = new TokenNode(ident, getCurrLine());
+
+    }
+
+    trace("Exit <factor>");
+    return fact;
+  }
 
   /***********
    *
