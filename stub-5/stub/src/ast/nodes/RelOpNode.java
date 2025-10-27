@@ -70,7 +70,34 @@ public final class RelOpNode extends SyntaxNode
      */
     @Override
     public Object evaluate(Environment env) throws EvaluationException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'evaluate'");
+        Object leftVal = leftExpr.evaluate(env);
+        Object rightVal = rightExpr.evaluate(env);
+
+        // Both operands must be numbers (Integer or Double)
+        if ((leftVal instanceof Integer || leftVal instanceof Double) &&
+            (rightVal instanceof Integer || rightVal instanceof Double)) {
+
+            double l = (leftVal instanceof Integer) ? (Integer) leftVal : (Double) leftVal;
+            double r = (rightVal instanceof Integer) ? (Integer) rightVal : (Double) rightVal;
+
+            switch (op) {
+                case LT:  return l < r;
+                case LTE: return l <= r;
+                case GT:  return l > r;
+                case GTE: return l >= r;
+                case EQ:  return l == r;
+                case NEQ: return l != r;
+                default:
+                    logError("Unsupported relational operation: " + op);
+                    throw new EvaluationException();
+            }
+        } else {
+            logError("Type mismatch in relational operation: " + op);
+            throw new EvaluationException();
+        }
+    }
+
+    protected void logError(String message) {
+        System.err.println("Evaluation error: " + message);
     }
 }

@@ -70,7 +70,69 @@ public final class BinOpNode extends SyntaxNode
      */
     @Override
     public Object evaluate(Environment env) throws EvaluationException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'evaluate'");
+        Object leftVal = leftTerm.evaluate(env);
+        Object rightVal = rightTerm.evaluate(env);
+
+        if (leftVal instanceof Integer && rightVal instanceof Integer) {
+        int l = (Integer) leftVal;
+        int r = (Integer) rightVal;
+
+        switch (op) {
+            case ADD: return l + r;
+            case SUB: return l - r;
+            case MULT: return l * r;
+            case DIV:
+                if (r == 0) {
+                    logError("Division by zero");
+                    throw new EvaluationException();
+                }
+                return l / r;
+            case MOD: return l % r;
+            default:
+                logError("Unsupported binary integer operation: " + op);
+                throw new EvaluationException();
+        }
     }
-}
+
+    // Doubles
+    else if (leftVal instanceof Double && rightVal instanceof Double) {
+        double l = (Double) leftVal;
+        double r = (Double) rightVal;
+
+        switch (op) {
+            case ADD: return l + r;
+            case SUB: return l - r;
+            case MULT: return l * r;
+            case DIV:
+                if (r == 0.0) {
+                    logError("Division by zero");
+                    throw new EvaluationException();
+                }
+                return l / r;
+            default:
+                logError("Unsupported binary real operation: " + op);
+                throw new EvaluationException();
+        }
+    }
+
+    // Booleans
+    else if (leftVal instanceof Boolean && rightVal instanceof Boolean) {
+        boolean l = (Boolean) leftVal;
+        boolean r = (Boolean) rightVal;
+
+        switch (op) {
+            case AND: return l && r;
+            case OR:  return l || r;
+            default:
+                logError("Unsupported binary boolean operation: " + op);
+                throw new EvaluationException();
+        }
+    }
+
+    // Type mismatch
+    else {
+        logError("Type mismatch for binary operation: " + op);
+        throw new EvaluationException();
+    }
+
+}}

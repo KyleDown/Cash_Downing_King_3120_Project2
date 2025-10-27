@@ -60,7 +60,26 @@ public final class TokenNode extends SyntaxNode
      */
     @Override
     public Object evaluate(Environment env) throws EvaluationException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'evaluate'");
+        switch (token.getType()){
+            case INT:
+                return Integer.parseInt(token.getValue());
+            case REAL:
+                return Double.parseDouble(token.getValue());
+            case TRUE:
+                return Boolean.TRUE;
+            case FALSE:
+                return Boolean.FALSE;
+            case ID:
+            Object value = env.lookup(token);
+            if (value == null) {
+                logError("Undefined identifier: " + token.getValue());
+                throw new EvaluationException();
+            }
+            return value;
+
+        default:
+            logError("Cannot evaluate token type: " + token.getType());
+            throw new EvaluationException();
     }
-}
+
+} }

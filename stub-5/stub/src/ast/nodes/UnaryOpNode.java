@@ -65,7 +65,20 @@ public final class UnaryOpNode extends SyntaxNode
      */
     @Override
     public Object evaluate(Environment env) throws EvaluationException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'evaluate'");
+    // Evaluate the operand
+    Object value = expr.evaluate(env);
+
+    // Handle the unary operation
+    if (op == TokenType.NOT) {
+        if (value instanceof Boolean) {
+            return !(Boolean) value;
+        } else {
+            logError("Unary NOT operator applied to non-boolean value: " + value);
+            throw new EvaluationException();
+        }
+    } else {
+        logError("Unsupported unary operator: " + op);
+        throw new EvaluationException();
     }
+}
 }
