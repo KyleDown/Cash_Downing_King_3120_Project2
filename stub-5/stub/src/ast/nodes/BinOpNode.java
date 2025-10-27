@@ -63,7 +63,21 @@ public final class BinOpNode extends SyntaxNode
 
     /**
      * Evaluate the node.
+     * <p>
+     * This method evaluates the left and right operands and then performs
+     * depends on the types of the operands:
+     * <ul>
+     *   <li>Integer operands: ADD, SUB, MULT, DIV, MOD</li>
+     *   <li>Double operands: ADD, SUB, MULT, DIV (MOD not supported for doubles)</li>
+     *   <li>Boolean operands: AND, OR</li>
+     * </ul>
+     * Type mismatches or unsupported operations will result in an 
+     * {@link EvaluationException}.
+     * </p>
      * 
+     * <p>
+     * Division by zero is also caught and triggers an {@link EvaluationException}.
+     * </p>
      * @param env the executional environment we should evaluate the node under.
      * @return the object representing the result of the evaluation.
      * @throws EvaluationException if the evaluation fails.

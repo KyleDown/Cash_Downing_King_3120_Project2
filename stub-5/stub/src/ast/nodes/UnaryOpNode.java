@@ -59,6 +59,18 @@ public final class UnaryOpNode extends SyntaxNode
     /**
      * Evaluate the node.
      * 
+     * <p>
+     * This method evaluates the operand and applies the unary operator {@code op}.
+     * Currently, the only supported unary operation is:
+     * <ul>
+     *   <li>{@code NOT}: logical negation on a Boolean value</li>
+     * </ul>
+     * </p>
+     * 
+     * <p>
+     * If the operand is not a Boolean or if an unsupported operator is specified,
+     * an {@link EvaluationException} is thrown and the error is logged.
+     * </p>
      * @param env the executional environment we should evaluate the node under.
      * @return the object representing the result of the evaluation.
      * @throws EvaluationException if the evaluation fails.

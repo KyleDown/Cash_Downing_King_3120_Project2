@@ -63,7 +63,24 @@ public final class RelOpNode extends SyntaxNode
 
     /**
      * Evaluate the node.
+     * <p>
+     * This method evaluates the left and right operands and then applies the
+     * relational operator {@code op}. Both operands must be numbers 
+     * (Integer or Double). Supported operators are:
+     * <ul>
+     *   <li>{@code LT}  : less than</li>
+     *   <li>{@code LTE} : less than or equal to</li>
+     *   <li>{@code GT}  : greater than</li>
+     *   <li>{@code GTE} : greater than or equal to</li>
+     *   <li>{@code EQ}  : equal to</li>
+     *   <li>{@code NEQ} : not equal to</li>
+     * </ul>
+     * </p>
      * 
+     * <p>
+     * If the operands are not numeric or an unsupported operator is specified,
+     * an {@link EvaluationException} is thrown and the error is logged.
+     * </p>
      * @param env the executional environment we should evaluate the node under.
      * @return the object representing the result of the evaluation.
      * @throws EvaluationException if the evaluation fails.

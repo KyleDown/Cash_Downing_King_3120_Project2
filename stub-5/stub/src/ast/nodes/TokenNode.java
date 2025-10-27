@@ -53,7 +53,15 @@ public final class TokenNode extends SyntaxNode
 
     /**
      * Evaluate the node.
-     * 
+     * <p>
+     * Depending on the type of the token:
+     * <ul>
+     *   <li>INT: returns an Integer representing the token's value.</li>
+     *   <li>REAL: returns a Double representing the token's value.</li>
+     *   <li>TRUE/FALSE: returns a Boolean.</li>
+     *   <li>ID: looks up the token in the environment and returns its value.</li>
+     * </ul>
+     * </p>
      * @param env the executional environment we should evaluate the node under.
      * @return the object representing the result of the evaluation.
      * @throws EvaluationException if the evaluation fails.
