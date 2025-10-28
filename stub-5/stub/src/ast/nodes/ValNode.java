@@ -65,7 +65,17 @@ public final class ValNode extends SyntaxNode
      */
     @Override
     public Object evaluate(Environment env) throws EvaluationException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'evaluate'");
+
+        // evaluate the expression for the value
+        Object value = expr.evaluate(env);
+
+        // update the global environment with the new binding
+        env.updateEnvironment(name, value);
+
+        // print the name of the identifier
+        System.out.println(name.getValue());
+
+        // return
+        return value;
     }
 }

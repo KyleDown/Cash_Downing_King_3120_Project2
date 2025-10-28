@@ -64,7 +64,13 @@ public final class ProgNode extends SyntaxNode
      */
     @Override
     public Object evaluate(Environment env) throws EvaluationException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'evaluate'");
+        Object lastValue = null;
+
+        // evaluate each expression in order
+        for (SyntaxNode expr : exprs) {
+            lastValue = expr.evaluate(env);
+        }
+
+        return lastValue;
     }
 }

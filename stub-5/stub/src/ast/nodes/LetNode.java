@@ -49,7 +49,21 @@ public class LetNode extends SyntaxNode {
      */
     @Override
     public Object evaluate(Environment env) throws EvaluationException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'evaluate'");
+
+    // evaluate the bound expression
+    Object value = varExpression.evaluate(env);
+
+    // create a local copy of the environment
+    Environment localEnv = env.copy();
+
+    // bind variable in the local environment
+    localEnv.updateEnvironment(varName, value);
+
+    // evaluate body expression using the local environment
+    Object result = body.evaluate(localEnv);
+
+    // return result
+    return result;
     }
+        
 }
