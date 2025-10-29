@@ -25,8 +25,7 @@ import lexer.Token;
  * 
  * @author Zach Kissel
  */
-public final class ValNode extends SyntaxNode
-{
+public final class ValNode extends SyntaxNode {
     private Token name;
     private SyntaxNode expr;
 
@@ -37,8 +36,7 @@ public final class ValNode extends SyntaxNode
      * @param expr the value of the name.
      * @param line the line of code the node is associated with.
      */
-    public ValNode(Token name, SyntaxNode expr, long line)
-    {
+    public ValNode(Token name, SyntaxNode expr, long line) {
         super(line);
         this.name = name;
         this.expr = expr;
@@ -49,8 +47,7 @@ public final class ValNode extends SyntaxNode
      * 
      * @param indentAmt the amout of indentation to perform.
      */
-    public void displaySubtree(int indentAmt)
-    {
+    public void displaySubtree(int indentAmt) {
         printIndented("Val[" + name.getValue() + "](", indentAmt);
         expr.displaySubtree(indentAmt + 2);
         printIndented(")", indentAmt);
@@ -75,7 +72,7 @@ public final class ValNode extends SyntaxNode
         // print the name of the identifier
         System.out.println(name.getValue());
 
-        // return
-        return value;
+        // return the name of the variable.
+        return name.getValue();
     }
 }
