@@ -25,8 +25,7 @@ import lexer.TokenType;
  * 
  * @author Zach Kissel
  */
-public final class RelOpNode extends SyntaxNode
-{
+public final class RelOpNode extends SyntaxNode {
     private TokenType op;
     private SyntaxNode leftExpr;
     private SyntaxNode rightExpr;
@@ -40,8 +39,7 @@ public final class RelOpNode extends SyntaxNode
      * @param line  the line of code the node is associated with.
      */
     public RelOpNode(SyntaxNode lexpr, TokenType op, SyntaxNode rexpr,
-            long line)
-    {
+            long line) {
         super(line);
         this.op = op;
         this.leftExpr = lexpr;
@@ -53,8 +51,7 @@ public final class RelOpNode extends SyntaxNode
      * 
      * @param indentAmt the amout of indentation to perform.
      */
-    public void displaySubtree(int indentAmt)
-    {
+    public void displaySubtree(int indentAmt) {
         printIndented("RelOp[" + op + "](", indentAmt);
         leftExpr.displaySubtree(indentAmt + 2);
         rightExpr.displaySubtree(indentAmt + 2);
@@ -65,15 +62,15 @@ public final class RelOpNode extends SyntaxNode
      * Evaluate the node.
      * <p>
      * This method evaluates the left and right operands and then applies the
-     * relational operator {@code op}. Both operands must be numbers 
+     * relational operator {@code op}. Both operands must be numbers
      * (Integer or Double). Supported operators are:
      * <ul>
-     *   <li>{@code LT}  : less than</li>
-     *   <li>{@code LTE} : less than or equal to</li>
-     *   <li>{@code GT}  : greater than</li>
-     *   <li>{@code GTE} : greater than or equal to</li>
-     *   <li>{@code EQ}  : equal to</li>
-     *   <li>{@code NEQ} : not equal to</li>
+     * <li>{@code LT} : less than</li>
+     * <li>{@code LTE} : less than or equal to</li>
+     * <li>{@code GT} : greater than</li>
+     * <li>{@code GTE} : greater than or equal to</li>
+     * <li>{@code EQ} : equal to</li>
+     * <li>{@code NEQ} : not equal to</li>
      * </ul>
      * </p>
      * 
@@ -81,6 +78,7 @@ public final class RelOpNode extends SyntaxNode
      * If the operands are not numeric or an unsupported operator is specified,
      * an {@link EvaluationException} is thrown and the error is logged.
      * </p>
+     * 
      * @param env the executional environment we should evaluate the node under.
      * @return the object representing the result of the evaluation.
      * @throws EvaluationException if the evaluation fails.
@@ -92,18 +90,24 @@ public final class RelOpNode extends SyntaxNode
 
         // Both operands must be numbers (Integer or Double)
         if ((leftVal instanceof Integer || leftVal instanceof Double) &&
-            (rightVal instanceof Integer || rightVal instanceof Double)) {
+                (rightVal instanceof Integer || rightVal instanceof Double)) {
 
             double l = (leftVal instanceof Integer) ? (Integer) leftVal : (Double) leftVal;
             double r = (rightVal instanceof Integer) ? (Integer) rightVal : (Double) rightVal;
 
             switch (op) {
-                case LT:  return l < r;
-                case LTE: return l <= r;
-                case GT:  return l > r;
-                case GTE: return l >= r;
-                case EQ:  return l == r;
-                case NEQ: return l != r;
+                case LT:
+                    return l < r;
+                case LTE:
+                    return l <= r;
+                case GT:
+                    return l > r;
+                case GTE:
+                    return l >= r;
+                case EQ:
+                    return l == r;
+                case NEQ:
+                    return l != r;
                 default:
                     logError("Unsupported relational operation: " + op);
                     throw new EvaluationException();
@@ -112,9 +116,5 @@ public final class RelOpNode extends SyntaxNode
             logError("Type mismatch in relational operation: " + op);
             throw new EvaluationException();
         }
-    }
-
-    protected void logError(String message) {
-        System.err.println("Evaluation error: " + message);
     }
 }

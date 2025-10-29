@@ -25,8 +25,7 @@ import lexer.TokenType;
  * 
  * @author Zach Kissel
  */
-public final class UnaryOpNode extends SyntaxNode
-{
+public final class UnaryOpNode extends SyntaxNode {
     private TokenType op;
     private SyntaxNode expr;
 
@@ -37,8 +36,7 @@ public final class UnaryOpNode extends SyntaxNode
      * @param op   the binary operation to perform.
      * @param line the line of code the node is associated with.
      */
-    public UnaryOpNode(SyntaxNode expr, TokenType op, long line)
-    {
+    public UnaryOpNode(SyntaxNode expr, TokenType op, long line) {
         super(line);
         this.op = op;
         this.expr = expr;
@@ -49,8 +47,7 @@ public final class UnaryOpNode extends SyntaxNode
      * 
      * @param indentAmt the amout of indentation to perform.
      */
-    public void displaySubtree(int indentAmt)
-    {
+    public void displaySubtree(int indentAmt) {
         printIndented("UnaryOp[" + op + "](", indentAmt);
         expr.displaySubtree(indentAmt + 2);
         printIndented(")", indentAmt);
@@ -63,7 +60,7 @@ public final class UnaryOpNode extends SyntaxNode
      * This method evaluates the operand and applies the unary operator {@code op}.
      * Currently, the only supported unary operation is:
      * <ul>
-     *   <li>{@code NOT}: logical negation on a Boolean value</li>
+     * <li>{@code NOT}: logical negation on a Boolean value</li>
      * </ul>
      * </p>
      * 
@@ -71,26 +68,36 @@ public final class UnaryOpNode extends SyntaxNode
      * If the operand is not a Boolean or if an unsupported operator is specified,
      * an {@link EvaluationException} is thrown and the error is logged.
      * </p>
+     * 
      * @param env the executional environment we should evaluate the node under.
      * @return the object representing the result of the evaluation.
      * @throws EvaluationException if the evaluation fails.
      */
     @Override
     public Object evaluate(Environment env) throws EvaluationException {
-    // Evaluate the operand
-    Object value = expr.evaluate(env);
+        // Evaluate the operand
+        Object value = expr.evaluate(env);
 
-    // Handle the unary operation
-    if (op == TokenType.NOT) {
-        if (value instanceof Boolean) {
-            return !(Boolean) value;
+        // Handle the unary operation
+        if (op == TokenType.NOT) {
+            if (value instanceof Boolean) {
+                return !(Boolean) value;
+            } else {
+                logError("Unary NOT operator applied to non-boolean value: " + value);
+                throw new EvaluationException();
+            }
+        } else if (op == TokenType.SUB) {
+            if (value instanceof Integer) {
+                return -(Integer) value;
+            } else if (value instanceof Double) {
+                return -(Double) value;
+            } else {
+                logError("Unary SUB operator applied to non-numeric value: " + value);
+                throw new EvaluationException();
+            }
         } else {
-            logError("Unary NOT operator applied to non-boolean value: " + value);
+            logError("Unsupported unary operator: " + op);
             throw new EvaluationException();
         }
-    } else {
-        logError("Unsupported unary operator: " + op);
-        throw new EvaluationException();
     }
-}
 }
