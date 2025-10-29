@@ -1,1 +1,7 @@
-# Cash_Downing_King_3120_Project2
+# Merrimack Functional Language (MFL) Part 2
+
+Created by:
+
+Brandon Cash
+Kyle Downing
+Joey King
